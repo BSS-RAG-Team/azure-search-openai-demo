@@ -8,8 +8,11 @@
   },
   "scripts": {
     "dev": "vite --host 127.0.0.1",
+    "dev:debug": "vite --host 127.0.0.1 --debug --force",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build:debug": "tsc && vite build --mode development",
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@azure/msal-browser": "^4.16.0",

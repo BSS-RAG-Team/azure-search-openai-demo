@@ -1,3 +1,4 @@
+from __future__ import annotations
 from typing import Any, Optional, cast
 
 from azure.search.documents.agent.aio import KnowledgeAgentRetrievalClient

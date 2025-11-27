@@ -34,6 +34,51 @@
             "cwd": "${workspaceFolder}/app/frontend",
         },
         {
+            "name": "Frontend (Debug Mode)",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npm run dev:debug",
+            "cwd": "${workspaceFolder}/app/frontend",
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Frontend: Chrome",
+            "url": "http://127.0.0.1:5173",
+            "webRoot": "${workspaceFolder}/app/frontend/src",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "webpack:///./src/*": "${webRoot}/*"
+            },
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/app/frontend/node_modules/**"
+            ],
+            "trace": true,
+            "runtimeArgs": [
+                "--disable-web-security"
+            ]
+        },
+        {
+            "type": "msedge",
+            "request": "launch",
+            "name": "Frontend: Edge",
+            "url": "http://127.0.0.1:5173",
+            "webRoot": "${workspaceFolder}/app/frontend/src",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "webpack:///./src/*": "${webRoot}/*"
+            },
+            "skipFiles": [
+                "<node_internals>/**",
+                "${workspaceFolder}/app/frontend/node_modules/**"
+            ],
+            "trace": true,
+            "runtimeArgs": [
+                "--disable-web-security"
+            ]
+        },
+        {
             "name": "Tests (Python)",
             "type": "debugpy",
             "request": "launch",
@@ -47,6 +92,16 @@
         {
           "name": "Frontend & Backend",
           "configurations": ["Backend (Python)", "Frontend"],
+          "stopAll": true
+        },
+        {
+          "name": "Full Stack Debug (Chrome)",
+          "configurations": ["Backend (Python)", "Frontend", "Frontend: Chrome"],
+          "stopAll": true
+        },
+        {
+          "name": "Full Stack Debug (Edge)",
+          "configurations": ["Backend (Python)", "Frontend", "Frontend: Edge"],
           "stopAll": true
         }
     ]
