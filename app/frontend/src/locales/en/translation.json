@@ -1,6 +1,6 @@
 {
-    "pageTitle": "Azure OpenAI + AI Search",
-    "headerTitle": "Azure OpenAI + AI Search",
+    "pageTitle": "AARHUS UNIVERSITY",
+    "headerTitle": "AARHUS UNIVERSITY",
     "chat": "Chat",
     "qa": "Ask a question",
     "login": "Login",
@@ -34,20 +34,20 @@
     },
     "developerSettings": "Developer settings",
 
-    "chatEmptyStateTitle": "Chat with your data",
-    "chatEmptyStateSubtitle": "Ask anything or try an example",
+    "chatEmptyStateTitle": "Philosophy of Science Chatbot",
+    "chatEmptyStateSubtitle": "Navigate the complex landscape of social sciences and knowledge",
     "defaultExamples": {
-        "1": "What is included in my Northwind Health Plus plan that is not in standard?",
-        "2": "What happens in a performance review?",
-        "3": "What does a Product Manager do?",
-        "placeholder": "Type a new question (e.g. does my plan cover annual eye exams?)"
+        "1": "How does randomization in a Randomized Controlled Trial (RCT) help eliminate confounding variables?",
+        "2": "According to Guba, what is the main ontological difference between Positivism and Constructivism?",
+        "3": "Why does Nelson (2016) argue that social science constructs are more difficult to measure than atoms in physics?",
+        "placeholder": "Type a new question (e.g. In scientific reasoning, how does the starting point differ between Deduction and Induction?)"
     },
-    "askTitle": "Ask your data",
+    "askTitle": "Philosophy of Science Chatbot",
     "multimodalExamples": {
         "1": "Compare the impact of interest rates and GDP in financial markets.",
         "2": "What is the expected trend for the S&P 500 index over the next five years? Compare it to the past S&P 500 performance",
         "3": "Can you identify any correlation between oil prices and stock market trends?",
-        "placeholder": "Example: Does my plan cover annual eye exams?"
+        "placeholder": "Type a new question (e.g. In scientific reasoning, how does the starting point differ between Deduction and Induction?)"
     },
     "generatingAnswer": "Generating answer",
     "citationWithColon": "Citation:",
@@ -83,10 +83,11 @@
         "minimumSearchScore": "Minimum search score",
         "minimumRerankerScore": "Minimum reranker score",
         "retrieveCount": "Retrieve this many search results:",
-        "resultsMergeStrategy": "Results merge strategy",
-        "resultsMergeStrategyOptions": {
-            "interleaved": "Interleaved",
-            "descending": "Descending"
+        "agenticReasoningEffort": "Retrieval reasoning effort",
+        "agenticReasoningEffortOptions": {
+            "minimal": "Minimal",
+            "low": "Low",
+            "medium": "Medium"
         },
         "includeCategory": "Include category",
         "includeCategoryOptions": {
@@ -104,7 +105,9 @@
             "high": "High"
         },
         "useSuggestFollowupQuestions": "Suggest follow-up questions",
-        "useAgenticRetrieval": "Use agentic retrieval",
+        "useAgenticKnowledgeBase": "Use agentic retrieval",
+        "useWebSource": "Include web source",
+        "useSharePointSource": "Include Sharepoint source",
         "llmInputs": "LLM input sources",
         "llmInputsOptions": {
             "texts": "Text sources",
@@ -143,8 +146,8 @@
              "Sets a minimum score for search results coming back from the semantic reranker. The score always ranges between 0-4. The higher the score, the more semantically relevant the result is to the question.",
         "retrieveNumber":
              "Sets the number of search results to retrieve from Azure AI search. More results may increase the likelihood of finding the correct answer, but may lead to the model getting 'lost in the middle'.",
-        "resultsMergeStrategy":
-            "Sets the strategy for merging results from multiple subqueries. Interleaved picks the top results from each subquery in round robin order, while descending sorts all results by reranker score.",
+        "agenticReasoningEffort":
+            "Controls the amount of reasoning the agent uses while planning retrieval subqueries. Higher effort can improve recall at the cost of additional latency and tokens.",
         "includeCategory":
             "Specifies a category to include in the search results. There are no categories used in the default data set.",
          "excludeCategory":
@@ -167,7 +170,9 @@
         "streamChat": "Continuously streams the response to the chat UI as it is generated.",
         "useOidSecurityFilter": "Filter search results based on the authenticated user's OID.",
         "useGroupsSecurityFilter": "Filter search results based on the authenticated user's groups.",
-        "useAgenticRetrieval": "Use agentic retrieval from Azure AI Search for multi-query planning. Always uses semantic ranker."
+        "useAgenticKnowledgeBase": "Use agentic retrieval from Azure AI Search for multi-query planning. Always uses semantic ranker.",
+        "useWebSource": "Augment retrieval with web search results alongside your indexed data set.",
+        "useSharePointSource": "Augment retrieval with SharePoint content alongside your indexed data set."
     },
 
     "overallSettings": "Overall settings",
