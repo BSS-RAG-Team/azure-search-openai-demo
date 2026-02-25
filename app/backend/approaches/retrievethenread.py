@@ -1,4 +1,5 @@
 from dataclasses import asdict
+from __future__ import annotations
 from typing import Any, Optional, cast
 
 from azure.search.documents.aio import SearchClient

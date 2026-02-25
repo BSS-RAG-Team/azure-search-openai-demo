@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Console Monitor</title>
+    <style>
+        body {
+            font-family: 'Monaco', 'Menlo', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            background: #252526;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            margin: 0;
+            font-size: 18px;
+            color: #4ec9b0;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        button:hover {
+            background: #1177bb;
+        }
+        .clear-btn {
+            background: #d16969;
+        }
+        .clear-btn:hover {
+            background: #e07979;
+        }
+        #console-output {
+            background: #1e1e1e;
+            border: 1px solid #3c3c3c;
+            border-radius: 5px;
+            padding: 15px;
+            min-height: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 5px;
+            border-left: 3px solid transparent;
+        }
+        .log-entry.log {
+            border-left-color: #4ec9b0;
+        }
+        .log-entry.warn {
+            border-left-color: #dcdcaa;
+            background: rgba(220, 220, 170, 0.1);
+        }
+        .log-entry.error {
+            border-left-color: #f48771;
+            background: rgba(244, 135, 113, 0.1);
+        }
+        .log-entry.info {
+            border-left-color: #569cd6;
+        }
+        .log-entry.debug {
+            border-left-color: #9cdcfe;
+            opacity: 0.7;
+        }
+        .timestamp {
+            color: #858585;
+            font-size: 11px;
+            margin-right: 10px;
+        }
+        .log-type {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .log-type.log { color: #4ec9b0; }
+        .log-type.warn { color: #dcdcaa; }
+        .log-type.error { color: #f48771; }
+        .log-type.info { color: #569cd6; }
+        .log-type.debug { color: #9cdcfe; }
+        .log-message {
+            color: #d4d4d4;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #858585;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .stat-value {
+            color: #4ec9b0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>🔍 Frontend Console Monitor</h1>
+            <div class="stats">
+                <div class="stat">Total: <span id="total-count" class="stat-value">0</span></div>
+                <div class="stat">Logs: <span id="log-count" class="stat-value">0</span></div>
+                <div class="stat">Warnings: <span id="warn-count" class="stat-value">0</span></div>
+                <div class="stat">Errors: <span id="error-count" class="stat-value">0</span></div>
+            </div>
+        </div>
+        <div class="controls">
+            <button onclick="toggleCapture()"  id="capture-btn">⏸️ Pause</button>
+            <button onclick="exportLogs()">💾 Export</button>
+            <button onclick="clearConsole()" class="clear-btn">🗑️ Clear</button>
+        </div>
+    </div>
+    <div id="console-output"></div>
+
+    <script>
+        let logs = [];
+        let capturing = true;
+        let counts = { log: 0, warn: 0, error: 0, info: 0, debug: 0 };
+
+        // Intercept console methods
+        const originalConsole = {
+            log: console.log,
+            warn: console.warn,
+            error: console.error,
+            info: console.info,
+            debug: console.debug
+        };
+
+        function addLog(type, args) {
+            if (!capturing) return;
+
+            const timestamp = new Date().toLocaleTimeString('en-US', { hour12: false });
+            const message = Array.from(args).map(arg => {
+                if (typeof arg === 'object') {
+                    try {
+                        return JSON.stringify(arg, null, 2);
+                    } catch (e) {
+                        return String(arg);
+                    }
+                }
+                return String(arg);
+            }).join(' ');
+
+            const entry = { type, timestamp, message };
+            logs.push(entry);
+            counts[type] = (counts[type] || 0) + 1;
+
+            const outputDiv = document.getElementById('console-output');
+            const logDiv = document.createElement('div');
+            logDiv.className = `log-entry ${type}`;
+            logDiv.innerHTML = `
+                <span class="timestamp">${timestamp}</span>
+                <span class="log-type ${type}">${type.toUpperCase()}</span>
+                <span class="log-message">${escapeHtml(message)}</span>
+            `;
+            outputDiv.appendChild(logDiv);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+
+            updateCounts();
+        }
+
+        // Override console methods
+        console.log = function(...args) {
+            originalConsole.log.apply(console, args);
+            addLog('log', args);
+        };
+
+        console.warn = function(...args) {
+            originalConsole.warn.apply(console, args);
+            addLog('warn', args);
+        };
+
+        console.error = function(...args) {
+            originalConsole.error.apply(console, args);
+            addLog('error', args);
+        };
+
+        console.info = function(...args) {
+            originalConsole.info.apply(console, args);
+            addLog('info', args);
+        };
+
+        console.debug = function(...args) {
+            originalConsole.debug.apply(console, args);
+            addLog('debug', args);
+        };
+
+        // Capture unhandled errors
+        window.addEventListener('error', (event) => {
+            addLog('error', [`Uncaught Error: ${event.message} at ${event.filename}:${event.lineno}:${event.colno}`]);
+        });
+
+        // Capture unhandled promise rejections
+        window.addEventListener('unhandledrejection', (event) => {
+            addLog('error', [`Unhandled Promise Rejection: ${event.reason}`]);
+        });
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateCounts() {
+            document.getElementById('total-count').textContent = logs.length;
+            document.getElementById('log-count').textContent = counts.log || 0;
+            document.getElementById('warn-count').textContent = counts.warn || 0;
+            document.getElementById('error-count').textContent = counts.error || 0;
+        }
+
+        function toggleCapture() {
+            capturing = !capturing;
+            const btn = document.getElementById('capture-btn');
+            btn.textContent = capturing ? '⏸️ Pause' : '▶️ Resume';
+            btn.style.background = capturing ? '#0e639c' : '#4ec9b0';
+        }
+
+        function clearConsole() {
+            logs = [];
+            counts = { log: 0, warn: 0, error: 0, info: 0, debug: 0 };
+            document.getElementById('console-output').innerHTML = '';
+            updateCounts();
+        }
+
+        function exportLogs() {
+            const dataStr = JSON.stringify(logs, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `console-logs-${Date.now()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initial message
+        console.log('Console monitor initialized. All console output will be captured here.');
+        console.info('Monitoring console.log(), console.warn(), console.error(), console.info(), and console.debug()');
+    </script>
+</body>
+</html>

@@ -30,5 +30,22 @@
         "tests"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    // Enhanced debugging settings for frontend
+    "debug.javascript.autoAttachFilter": "smart",
+    "debug.javascript.unmapMissingSources": true,
+    "debug.javascript.terminalOptions": {
+        "skipFiles": [
+            "<node_internals>/**"
+        ]
+    },
+    // Console logging
+    "debug.console.fontSize": 14,
+    "debug.console.wordWrap": true,
+    // TypeScript debugging
+    "typescript.tsdk": "app/frontend/node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    // Better error display
+    "problems.decorations.enabled": true,
+    "problems.showCurrentInStatus": true
 }
